@@ -13,6 +13,8 @@ void show_inorder(node *p);
 
 void delete_tree(node *p);
 
+node *find_node(node *p, int key);
+
 int main() {
     int sel, key;
     node *root;
@@ -22,7 +24,8 @@ int main() {
         printf("----------\n");
         printf("1. Add Node\n");
         printf("2. Show Tree\n");
-        printf("3. Exit\n");
+        printf("3. Find Node\n");
+        printf("4. Exit\n");
 
         printf("enter choice :  ");
         scanf("%d", &sel);
@@ -38,6 +41,18 @@ int main() {
                 printf("\nDeleted keys: ");
                 delete_tree(root);
                 return 0;
+
+            case 3:
+                printf("enter key to search: ");
+                scanf("%d", &key);
+                root = find_node(root, key);
+                if (root != NULL) {
+                    root->key = key;
+                    printf("found key %d", root->key);
+                } else {
+                    printf("\nkey is not found\n");
+                }
+                break;
 
             default:
                 printf("\nWrong choice\n");
@@ -85,4 +100,20 @@ void delete_tree(node *p) {
     delete_tree(p->right);
     printf("%d ", p->key);
     free(p);
+}
+
+node *find_node(node *p, int key) {
+    if (p == NULL) {
+        return NULL;
+    }
+    while (p != NULL) {
+        if (key < p->key) {
+            p = p->left;
+        } else if (key > p->key) {
+            p = p->right;
+        } else {
+            return p;
+        }
+    }
+    return NULL;
 }
