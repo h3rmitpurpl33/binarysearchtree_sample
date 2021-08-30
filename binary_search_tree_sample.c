@@ -75,6 +75,7 @@ int main() {
                 } else {
                     printf("list is empty\n");
                 }
+                break;
 
 
             default:
