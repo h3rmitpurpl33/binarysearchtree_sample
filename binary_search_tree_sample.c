@@ -9,7 +9,7 @@ typedef struct node {
 
 node *add_node(node *p, int key);
 
-void show_inorder(node *p);
+void show_tree(node *p);
 
 void delete_tree(node *p);
 
@@ -20,6 +20,7 @@ void show_preorder(node *p);
 void show_postorder(node *p);
 
 int main() {
+
     int sel, key;
     node *root;
     root = NULL;
@@ -27,7 +28,8 @@ int main() {
         printf("\nMenu selections\n");
         printf("----------\n");
         printf("1. Add Node\n");
-        printf("2. Show Tree\n");
+        printf("2. Show In Order\n");
+        printf("3. Show Tree\n");
         printf("3. Find Node\n");
         printf("4. Show preorder\n");
         printf("5. Show postorder\n");
@@ -38,45 +40,47 @@ int main() {
 
         switch (sel) {
             case 1:
-                printf("key: ");
+                printf("enter key : ");
                 scanf("%d", &key);
                 root = add_node(root, key);
                 break;
-
             case 2:
-                printf("\nDeleted keys: ");
+                if (root == NULL) {
+                    printf("empty list\n");
+                    exit(EXIT_FAILURE);
+                } else {
+                    show_tree(root);
+                }
+                break;
+            case 3:
+                printf("deleted keys: ");
                 delete_tree(root);
                 return 0;
-
-            case 3:
-                printf("enter key to search: ");
+            case 4:
+                printf("enter key to search : ");
                 scanf("%d", &key);
                 root = find_node(root, key);
                 if (root != NULL) {
-                    printf("found key %d", root->key);
+                    printf("\nkey found in %d", root->key);
                 } else {
-                    printf("\nkey is not found\n");
+                    printf("key not found");
                 }
-                break;
-
-            case 4:
+            case 5:
                 if (root != NULL) {
                     show_preorder(root);
                 } else {
-                    printf("list is empty\n");
+                    printf("empty list\n");
                 }
                 break;
-            case 5:
+            case 6:
                 if (root != NULL) {
                     show_postorder(root);
                 } else {
-                    printf("list is empty\n");
+                    printf("empty list\n");
                 }
                 break;
-
-
             default:
-                printf("\nWrong choice\n");
+                printf("\nwrong key");
                 break;
         }
     }
@@ -85,32 +89,31 @@ int main() {
 
 node *add_node(node *p, int key) {
     if (p == NULL) {
-        p = (node *) malloc(sizeof(node));
+        p = malloc(sizeof(node));
         if (p == NULL) {
-            printf("error: not available memory\n");
+            printf("not available memo\n");
             exit(EXIT_FAILURE);
         }
         p->left = p->right = NULL;
         p->key = key;
-    } else {
         if (key < p->key) {
             p->left = add_node(p->left, key);
         } else if (key > p->key) {
             p->right = add_node(p->right, key);
         } else {
-            printf("error: key(%d) exists\n", key);
+            printf("error:key %d already exists\n", key);
         }
     }
-    return p;
+    return NULL;
 }
 
-void show_inorder(node *p) {
+void show_tree(node *p) {
     if (p == NULL) {
         return;
     }
-    show_inorder(p->left);
+    show_tree(p->left);
     printf("%d", p->key);
-    show_inorder(p->right);
+    show_tree(p->right);
 }
 
 void delete_tree(node *p) {
@@ -119,7 +122,6 @@ void delete_tree(node *p) {
     }
     delete_tree(p->left);
     delete_tree(p->right);
-    printf("%d ", p->key);
     free(p);
 }
 
@@ -143,18 +145,16 @@ void show_preorder(node *p) {
     if (p == NULL) {
         return;
     }
-    printf("%d ", p->key);
+    printf("%d", p->key);
     show_preorder(p->left);
-    show_preorder(p->right);//η διαφορα ειναι η κληση της prinft()
-    //κληση πριν την show_preorder δειχνει τις ριζες με τον τροπο που τις εισαγαμε
-    //κληση μετα την show_postorder τις δειχνει αντιστροφα
+    show_postorder(p->right);
 }
 
 void show_postorder(node *p) {
     if (p == NULL) {
         return;
     }
-    show_postorder(p->left);
+    printf("%d", p->key);
+    show_preorder(p->left);
     show_postorder(p->right);
-    printf("%d ", p->key);
 }
