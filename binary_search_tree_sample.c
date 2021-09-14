@@ -11,7 +11,7 @@ node *add_node(node *p, int key);
 
 void show_tree(node *p);
 
-void delete_node(node *p);
+void delete_tree(node *p);
 
 node *find_node(node *p, int key);
 
@@ -27,8 +27,7 @@ int main() {
         printf("\nMenu selections\n");
         printf("----------\n");
         printf("1. Add Node\n");
-        printf("2. Show In Order\n");
-        printf("3. Show Tree\n");
+        printf("2. Show Tree\n");
         printf("3. Find Node\n");
         printf("4. Show preorder\n");
         printf("5. Show postorder\n");
@@ -39,48 +38,34 @@ int main() {
 
         switch (sel) {
             case 1:
-                printf("enter key : ");
+                printf("enter key: ");
                 scanf("%d", &key);
                 root = add_node(root, key);
                 break;
+
             case 2:
-                if (root == NULL) {
-                    printf("empty list\n");
-                } else {
-                    show_tree(root);
-                }
+                show_tree(root);
                 break;
+
             case 3:
-                printf("deleted keys\n");
-                delete_node(root);
-                return 0;
-            case 4:
                 printf("enter key to search : ");
                 scanf("%d", &key);
                 root = find_node(root, key);
-                if (root == NULL) {
-                    printf("key not found\n");
-                } else {
-                    printf("found key %d", root->key);
-                }
+                printf("key %d found\n", root->key);
+                break;
+            case 4:
+                show_preorder(root);
                 break;
             case 5:
-                if (root == NULL) {
-                    printf("empty list\n");
-                } else {
-                    show_preorder(root);
-                }
+                show_postorder(root);
                 break;
             case 6:
-                if (root == NULL) {
-                    printf("empty list\n");
-                } else {
-                    show_postorder(root);
-                }
-                break;
+                exit(0);
             default:
-                printf("wrong key\n");
+                printf("\nwrong key\n");
                 break;
+
+
         }
     }
     return 0;
@@ -88,13 +73,14 @@ int main() {
 
 node *add_node(node *p, int key) {
     if (p == NULL) {
-        p = malloc(sizeof(node));
+        p = (node *) malloc(sizeof(node));
         if (p == NULL) {
             printf("not available memory\n");
             exit(EXIT_FAILURE);
         }
         p->left = p->right = NULL;
         p->key = key;
+    } else {
         if (key < p->key) {
             p->left = add_node(p->left, key);
         } else if (key > p->key) {
@@ -103,7 +89,7 @@ node *add_node(node *p, int key) {
             printf("key %d already exists ", key);
         }
     }
-    return NULL;
+    return p;
 }
 
 void show_tree(node *p) {
@@ -111,16 +97,16 @@ void show_tree(node *p) {
         return;
     }
     show_tree(p->left);
-    printf("%d", p->key);
+    printf("%d ", p->key);
     show_tree(p->right);
 }
 
-void delete_node(node *p) {
+void delete_tree(node *p) {
     if (p == NULL) {
         return;
     }
-    delete_node(p->left);
-    delete_node(p->right);
+    delete_tree(p->left);
+    delete_tree(p->right);
     free(p);
 }
 
@@ -153,7 +139,7 @@ void show_postorder(node *p) {
     if (p == NULL) {
         return;
     }
-    show_preorder(p->left);
-    show_preorder(p->right);
+    show_postorder(p->left);
+    show_postorder(p->right);
     printf("%d ", p->key);
 }
