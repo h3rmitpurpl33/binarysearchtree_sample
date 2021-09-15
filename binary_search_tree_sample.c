@@ -16,7 +16,7 @@ struct btree *create_btree();
 
 struct tree_node *new_tree_node(int num);
 
-struct tree_node *find_tree_node(struct btree *bt, int key);
+struct tree_node *find_in_btree(struct btree *bt, int key);
 
 bool insert_in_btree(struct btree *bt, int num);
 
@@ -39,7 +39,9 @@ int main() {
     struct tree_node *node_ptr;
 
     while (1) {
+        printf("\n******Menu selection ******\n");
         printf("0.Exit, 1.Insert, 2.Find Node, 3.Delete, 4.Show Tree\n");
+        printf("enter choice : ");
         ch = getchar();
         switch (ch) {
             case '0':
@@ -54,9 +56,9 @@ int main() {
             case '2':
                 printf("timh : ");
                 scanf("%d", &timi);
-                node_ptr = find_tree_node(mytree, timi);
+                node_ptr = find_in_btree(mytree, timi);
                 if (node_ptr != NULL) {
-                    printf("vrethike\n");
+                    printf("vrethike timh = %d", node_ptr->data);
                 } else {
                     printf("den vrethike\n");
                 }
@@ -244,4 +246,3 @@ struct tree_node *find_right_most(struct tree_node *rt) {
         current = current->right;
     return current;
 }
-
